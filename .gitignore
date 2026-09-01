@@ -1,0 +1,13 @@
+# Xilinx temporary files
+*.log
+*.jou
+*.str
+.Xil/
+
+#Vivado run and simulation outputs
+*.dir/
+*.pb
+*.wdb
+*.dcp
+*.rpt
+xsim/
