@@ -1,0 +1,372 @@
+ISim P.20131013 (signature 0x7708f090)
+This is a Full version of ISim.
+Time resolution is 1 ps
+Simulator is doing circuit initialization process.
+
+==================================================
+           DIGITAL COMMUNICATION SYSTEM
+==================================================
+
+  PIPELINE FLOW:
+  >>> Source -> Huffman -> Hamming -> ASK -> Channel -> ASK Demod -> Channel Dec -> Source Dec -> Destination
+
+  THEORY OVERVIEW
+--------------------------------------------------
+  1. SOURCE GENERATOR: Emits ASCII characters.
+  2. HUFFMAN ENCODER: Compresses data.
+  3. HAMMING ENCODER: Adds parity for error correction.
+  4. ASK MODULATOR: Converts bits to analog waveform.
+  5. COMMUNICATION CHANNEL: Carries signal, injects noise.
+  6. ASK DEMODULATOR: Recovers bits from analog wave.
+  7. CHANNEL DECODER: Fixes the flipped bit.
+  8. SOURCE DECODER: Extracts Huffman codes.
+  9. DESTINATION: Decodes Huffman codes to ASCII characters.
+--------------------------------------------------
+
+  Loaded 4 characters: 
+NANI
+==================================================
+
+
+
+==================================================
+               CHARACTER #0 : 'N'
+==================================================
+
+*** STAGE 1 : SOURCE GENERATOR ***
+    Data       : 'N' (0x4e)
+--------------------------------------------------
+*** STAGE 2 : HUFFMAN SOURCE CODING ***
+    Code       : 10000
+    Length     : 5 bits
+--------------------------------------------------
+*** STAGE 3 : HAMMING(7,4) CHANNEL CODING ***
+    Data In    : 1000
+    Codeword   : 1110000
+--------------------------------------------------
+*** STAGE 4 : ASK MODULATION ***
+    Rule       : 1 -> Toggling Carrier (1010), 0 -> Flat Line (0000)
+    Bit 1 is 1 -> 1010
+    Bit 2 is 1 -> 1010
+    Bit 3 is 1 -> 1010
+    Bit 4 is 0 -> 0000
+    Bit 5 is 0 -> 0000
+    Bit 6 is 0 -> 0000
+    Bit 7 is 0 -> 0000
+--------------------------------------------------
+*** STAGE 5 : COMMUNICATION CHANNEL ***
+    Rule       : Received analog waveform (with noise)
+    Bit 1 is 1 -> 1010
+    Bit 2 is 1 -> 1010
+    Bit 3 is 1 -> 1010
+    Bit 4 is 0 -> 1010  <-- ** FLIPPED BY NOISE **
+    Bit 5 is 0 -> 0000
+    Bit 6 is 0 -> 0000
+    Bit 7 is 0 -> 0000
+    (Noise LFSR injected 1 bit error)
+--------------------------------------------------
+*** STAGE 6 : ASK DEMODULATION ***
+    Rule       : Envelope detection (Wait 4 cycles, check if ANY high signal)
+    Bit 1 is 1 -> 1010 (Envelope seen, output 1)
+    Bit 2 is 1 -> 1010 (Envelope seen, output 1)
+    Bit 3 is 1 -> 1010 (Envelope seen, output 1)
+    Bit 4 is 1 -> 1010 (Envelope seen, output 1)
+    Bit 5 is 0 -> 0000 (Flat line,    output 0)
+    Bit 6 is 0 -> 0000 (Flat line,    output 0)
+    Bit 7 is 0 -> 0000 (Flat line,    output 0)
+    [RX] Recovered codeword : 1111000
+--------------------------------------------------
+*** STAGE 7 : CHANNEL DECODER ***
+    Syndrome    : 100 (Error Detected!)
+    Corrected   : 1110000 (Bit fixed)
+    Clean Data  : 1000
+--------------------------------------------------
+*** STAGE 8 : SOURCE DECODER ***
+    Nibble      : 1000
+    Full Huffman Code (from Stage 2) : 10000  (5 bits)
+--------------------------------------------------
+*** STAGE 9 : DESTINATION ***
+    Huffman Code (INPUT) : 10000  (5 bits)
+    Char (OUTPUT)        : 'N'
+    Hex Value            : 0x4e
+==================================================
+
+
+
+==================================================
+               CHARACTER #1 : 'A'
+==================================================
+
+*** STAGE 1 : SOURCE GENERATOR ***
+    Data       : 'A' (0x41)
+--------------------------------------------------
+*** STAGE 2 : HUFFMAN SOURCE CODING ***
+    Code       : 0101
+    Length     : 4 bits
+--------------------------------------------------
+*** STAGE 3 : HAMMING(7,4) CHANNEL CODING ***
+    Data In    : 0101
+    Codeword   : 0100101
+--------------------------------------------------
+*** STAGE 4 : ASK MODULATION ***
+    Rule       : 1 -> Toggling Carrier (1010), 0 -> Flat Line (0000)
+    Bit 1 is 0 -> 0000
+    Bit 2 is 1 -> 1010
+    Bit 3 is 0 -> 0000
+    Bit 4 is 0 -> 0000
+    Bit 5 is 1 -> 1010
+    Bit 6 is 0 -> 0000
+    Bit 7 is 1 -> 1010
+--------------------------------------------------
+*** STAGE 5 : COMMUNICATION CHANNEL ***
+    Rule       : Received analog waveform (with noise)
+    Bit 1 is 0 -> 0000
+    Bit 2 is 1 -> 1010
+    Bit 3 is 0 -> 0000
+    Bit 4 is 0 -> 1010  <-- ** FLIPPED BY NOISE **
+    Bit 5 is 1 -> 1010
+    Bit 6 is 0 -> 0000
+    Bit 7 is 1 -> 1010
+    (Noise LFSR injected 1 bit error)
+--------------------------------------------------
+*** STAGE 6 : ASK DEMODULATION ***
+    Rule       : Envelope detection (Wait 4 cycles, check if ANY high signal)
+    Bit 1 is 0 -> 0000 (Flat line,    output 0)
+    Bit 2 is 1 -> 1010 (Envelope seen, output 1)
+    Bit 3 is 0 -> 0000 (Flat line,    output 0)
+    Bit 4 is 1 -> 1010 (Envelope seen, output 1)
+    Bit 5 is 1 -> 1010 (Envelope seen, output 1)
+    Bit 6 is 0 -> 0000 (Flat line,    output 0)
+    Bit 7 is 1 -> 1010 (Envelope seen, output 1)
+    [RX] Recovered codeword : 0101101
+--------------------------------------------------
+*** STAGE 7 : CHANNEL DECODER ***
+    Syndrome    : 100 (Error Detected!)
+    Corrected   : 0100101 (Bit fixed)
+    Clean Data  : 0101
+--------------------------------------------------
+*** STAGE 8 : SOURCE DECODER ***
+    Nibble      : 0101
+    Full Huffman Code (from Stage 2) : 0101  (4 bits)
+--------------------------------------------------
+*** STAGE 9 : DESTINATION ***
+    Huffman Code (INPUT) : 0101  (4 bits)
+    Char (OUTPUT)        : 'A'
+    Hex Value            : 0x41
+==================================================
+
+
+
+==================================================
+               CHARACTER #2 : 'N'
+==================================================
+
+*** STAGE 1 : SOURCE GENERATOR ***
+    Data       : 'N' (0x4e)
+--------------------------------------------------
+*** STAGE 2 : HUFFMAN SOURCE CODING ***
+    Code       : 10000
+    Length     : 5 bits
+--------------------------------------------------
+*** STAGE 3 : HAMMING(7,4) CHANNEL CODING ***
+    Data In    : 1000
+    Codeword   : 1110000
+--------------------------------------------------
+*** STAGE 4 : ASK MODULATION ***
+    Rule       : 1 -> Toggling Carrier (1010), 0 -> Flat Line (0000)
+    Bit 1 is 1 -> 1010
+    Bit 2 is 1 -> 1010
+    Bit 3 is 1 -> 1010
+    Bit 4 is 0 -> 0000
+    Bit 5 is 0 -> 0000
+    Bit 6 is 0 -> 0000
+    Bit 7 is 0 -> 0000
+--------------------------------------------------
+*** STAGE 5 : COMMUNICATION CHANNEL ***
+    Rule       : Received analog waveform (with noise)
+    Bit 1 is 1 -> 1010
+    Bit 2 is 1 -> 1010
+    Bit 3 is 1 -> 1010
+    Bit 4 is 0 -> 1010  <-- ** FLIPPED BY NOISE **
+    Bit 5 is 0 -> 0000
+    Bit 6 is 0 -> 0000
+    Bit 7 is 0 -> 0000
+    (Noise LFSR injected 1 bit error)
+--------------------------------------------------
+*** STAGE 6 : ASK DEMODULATION ***
+    Rule       : Envelope detection (Wait 4 cycles, check if ANY high signal)
+    Bit 1 is 1 -> 1010 (Envelope seen, output 1)
+    Bit 2 is 1 -> 1010 (Envelope seen, output 1)
+    Bit 3 is 1 -> 1010 (Envelope seen, output 1)
+    Bit 4 is 1 -> 1010 (Envelope seen, output 1)
+    Bit 5 is 0 -> 0000 (Flat line,    output 0)
+    Bit 6 is 0 -> 0000 (Flat line,    output 0)
+    Bit 7 is 0 -> 0000 (Flat line,    output 0)
+    [RX] Recovered codeword : 1111000
+--------------------------------------------------
+*** STAGE 7 : CHANNEL DECODER ***
+    Syndrome    : 100 (Error Detected!)
+    Corrected   : 1110000 (Bit fixed)
+    Clean Data  : 1000
+--------------------------------------------------
+*** STAGE 8 : SOURCE DECODER ***
+    Nibble      : 1000
+    Full Huffman Code (from Stage 2) : 10000  (5 bits)
+--------------------------------------------------
+*** STAGE 9 : DESTINATION ***
+    Huffman Code (INPUT) : 10000  (5 bits)
+    Char (OUTPUT)        : 'N'
+    Hex Value            : 0x4e
+==================================================
+
+
+
+==================================================
+               CHARACTER #3 : 'I'
+==================================================
+
+*** STAGE 1 : SOURCE GENERATOR ***
+    Data       : 'I' (0x49)
+--------------------------------------------------
+*** STAGE 2 : HUFFMAN SOURCE CODING ***
+    Code       : 0111
+    Length     : 4 bits
+--------------------------------------------------
+*** STAGE 3 : HAMMING(7,4) CHANNEL CODING ***
+    Data In    : 0111
+    Codeword   : 0001111
+--------------------------------------------------
+*** STAGE 4 : ASK MODULATION ***
+    Rule       : 1 -> Toggling Carrier (1010), 0 -> Flat Line (0000)
+    Bit 1 is 0 -> 0000
+    Bit 2 is 0 -> 0000
+    Bit 3 is 0 -> 0000
+    Bit 4 is 1 -> 1010
+    Bit 5 is 1 -> 1010
+    Bit 6 is 1 -> 1010
+    Bit 7 is 1 -> 1010
+--------------------------------------------------
+*** STAGE 5 : COMMUNICATION CHANNEL ***
+    Rule       : Received analog waveform (with noise)
+    Bit 1 is 0 -> 0000
+    Bit 2 is 0 -> 0000
+    Bit 3 is 0 -> 0000
+    Bit 4 is 1 -> 0000  <-- ** FLIPPED BY NOISE **
+    Bit 5 is 1 -> 1010
+    Bit 6 is 1 -> 1010
+    Bit 7 is 1 -> 1010
+    (Noise LFSR injected 1 bit error)
+--------------------------------------------------
+*** STAGE 6 : ASK DEMODULATION ***
+    Rule       : Envelope detection (Wait 4 cycles, check if ANY high signal)
+    Bit 1 is 0 -> 0000 (Flat line,    output 0)
+    Bit 2 is 0 -> 0000 (Flat line,    output 0)
+    Bit 3 is 0 -> 0000 (Flat line,    output 0)
+    Bit 4 is 0 -> 0000 (Flat line,    output 0)
+    Bit 5 is 1 -> 1010 (Envelope seen, output 1)
+    Bit 6 is 1 -> 1010 (Envelope seen, output 1)
+    Bit 7 is 1 -> 1010 (Envelope seen, output 1)
+    [RX] Recovered codeword : 0000111
+--------------------------------------------------
+*** STAGE 7 : CHANNEL DECODER ***
+    Syndrome    : 100 (Error Detected!)
+    Corrected   : 0001111 (Bit fixed)
+    Clean Data  : 0111
+--------------------------------------------------
+*** STAGE 8 : SOURCE DECODER ***
+    Nibble      : 0111
+    Full Huffman Code (from Stage 2) : 0111  (4 bits)
+--------------------------------------------------
+*** STAGE 9 : DESTINATION ***
+    Huffman Code (INPUT) : 0111  (4 bits)
+    Char (OUTPUT)        : 'I'
+    Hex Value            : 0x49
+==================================================
+
+
+
+==================================================
+        DIGITAL COMMUNICATION SYSTEM - REPORT
+==================================================
+
+--------------------------------------------------
+           MESSAGE TRANSMISSION SUMMARY
+--------------------------------------------------
+  #  | Char | Huffman Code  | Len | Hamming(TX) | RX(noisy) | 7 bit- Corrected codeword
+ ----+------+---------------+-----+-------------+-----------+--------
+  0  |  N   | 10000   |  5  |  1110000  |  1111000  | 1110000
+  1  |  A   | 0101    |  4  |  0100101  |  0101101  | 0100101
+  2  |  N   | 10000   |  5  |  1110000  |  1111000  | 1110000
+  3  |  I   | 0111    |  4  |  0001111  |  0000111  | 0001111
+ ----+------+---------------+-----+-------------+-----------+--------
+
+  Original Message  : NANI
+
+  Match Status      : PASS - All characters recovered correctly
+
+--------------------------------------------------
+           ERROR CORRECTION STATISTICS
+--------------------------------------------------
+  Total Characters Sent      : 4
+  Channel Errors Injected    : 4
+  Errors Detected by Hamming : 4
+  Errors Corrected           : 4
+  Uncorrectable Errors       : 0
+  Hamming Decoder Status     : PASS - All errors corrected
+
+--------------------------------------------------
+           BIT / CODING STATISTICS
+--------------------------------------------------
+  Raw ASCII Bits             : 32  (8 bits/char)
+  Huffman Compressed Bits    : 18  (avg 4.50 bits/char)
+  Hamming Codewords Sent     : 4
+  Hamming Encoded Bits       : 28  (7 bits/codeword)
+  Channel Errors             : 4
+  Bit Error Rate (BER)       : 0.1429  (4/28)
+  Huffman Compression Ratio  : 56.25%  (Huff/ASCII)
+
+--------------------------------------------------
+           PIPELINE STAGE SUMMARY
+--------------------------------------------------
+  Stage 1 - Source Generator    : Generated 4 characters
+  Stage 2 - Huffman Encoder     : Compressed to 18 bits
+  Stage 3 - Hamming Encoder     : Produced 4 codewords
+  Stage 4 - ASK Modulator       : Transmitted analog waveform
+  Stage 5 - Communication Chnl  : Injected 4 bit errors
+  Stage 6 - ASK Demodulator     : Recovered digital bits
+  Stage 7 - Channel Decoder     : Corrected all errors
+  Stage 8 - Source Decoder      : Extracted Huffman codes
+  Stage 9 - Destination         : Decoded Huffman codes to ASCII
+
+
+--------------------------------------------------
+           DESTINATION DECODING TABLE
+--------------------------------------------------
+  #  | Huffman Code (INPUT) | Len | Char (OUT) | Hex Val
+ ----+----------------------+-----+------------+---------
+  0  | 10000               |  5  |     'N'    |  0x4e
+  1  | 0101                |  4  |     'A'    |  0x41
+  2  | 10000               |  5  |     'N'    |  0x4e
+  3  | 0111                |  4  |     'I'    |  0x49
+ ----+----------------------+-----+------------+---------
+
+--------------------------------------------------
+           TRANSMISSION COMPLETE
+--------------------------------------------------
+  SENT     : "NANI"
+  RECEIVED : "NANI"
+  STATUS   : DELIVERED
+  ERRORS   : 4 injected, 4 corrected, 0 remaining
+  INTEGRITY: 100% MATCH
+--------------------------------------------------
+
+         [ RECEIVER ACKNOWLEDGES MESSAGE ]
+
+              > > >   E N D   < < <
+
+==================================================
+      DIGITAL COMMUNICATION SYSTEM - CLOSED
+==================================================
+
+Finished circuit initialization process.
+ISim>  
